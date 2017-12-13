@@ -4,15 +4,16 @@
 
 SESSION_LIST = """tmux list-s -F "#{session_name},#{session_id},#{session_attached}" """
 SESSION_COLS = ['session_name', 'session_id', 'session_attached']
-WINDOW_LIST  = """tmux list-windows -a -F "#{session_name},#{window_name},#{window_id}" """
-WINDOW_COLS  = ['session_name', 'window_name', 'window_id']
-PANE_LIST    = """tmux list-panes -a -F "#{session_name},#{window_name},#{pane_id},#{pane_active}" """
-PANE_COLS    = ['session_name', 'window_name', 'pane_id', 'pane_active']
+WINDOW_LIST  = """tmux list-windows -a -F "#{session_id},#{window_name},#{window_id}" """
+WINDOW_COLS  = ['session_id', 'window_name', 'window_id']
+PANE_LIST    = """tmux list-panes -a -F "#{session_id},#{window_id},#{pane_id},#{pane_active},#{pane_title}" """
+PANE_COLS    = ['session_id', 'window_id', 'pane_id', 'pane_active', 'pane_title']
 
 import csv
 import subprocess
 import shlex
 import io
+import os
 
 
 def tmux_cmd_csv(cmd, cols):
@@ -26,29 +27,118 @@ def tmux_cmd_csv(cmd, cols):
 class TMux(object):
     def __init__(self):
         self.sessions = []
+        self.raw_lists = {}
+        self.this_pane = os.environ.get('TMUX_PANE', None)
+        self._load()
+
+    def _load(self):
+        self.raw_lists['sessions'] = tmux_cmd_csv(SESSION_LIST, SESSION_COLS)
+        self.raw_lists['windows'] = tmux_cmd_csv(WINDOW_LIST, WINDOW_COLS)
+        self.raw_lists['panes'] = tmux_cmd_csv(PANE_LIST, PANE_COLS)
+        for session_dict in self.raw_lists['sessions']:
+            session = Session(tmux=self, info=session_dict)
+            self.sessions.append(session)
+        for window_dict in self.raw_lists['windows']:
+            session = self.find_session_by_id(window_dict['session_id'])
+            window = Window(session)
+            window.update_info(window_dict)
+            session.add_window(window)
+        for pane_dict in self.raw_lists['panes']:
+            session = self.find_session_by_id(pane_dict['session_id'])
+            window = session.find_window_by_id(pane_dict['window_id'])
+            pane = Pane(window)
+            pane.update_info(pane_dict)
+            window.add_pane(pane)
+
+    def find_session_by_id(self, idn):
+        for session in self.sessions:
+            if idn == session.id:
+                return session
+        return None
+
+    def current_session(self):
+        for session in self.sessions:
+            if session.current_window():
+                return session
 
 
 class Session(object):
-    def __init__(self, tmux=None):
+    def __init__(self, tmux=None, info=None):
         self.windows = []
         self.tmux = tmux
+        self.name = None
+        self.id = None
+        self.attached = None
+        if info:
+            self.update_info(info)
 
+    def update_info(self, d):
+        self.name = d['session_name']
+        self.id = d['session_id']
+        self.attached = d['session_attached']
 
-class Windows(object):
+    def add_window(self, win):
+        self.windows.append(win)
+        
+    def find_window_by_id(self, idn):
+        for window in self.windows:
+            if window.id == idn:
+                return window
+        return None
+
+    def current_window(self):
+        for window in self.windows:
+            if window.current_pane():
+                return window
+        return None
+
+class Window(object):
     def __init__(self, session=None):
         self.name = None
         self.session = session
         self.id = None
+        self.panes = []
+
+    def update_info(self, d):
+        self.name = d['window_name']
+        self.id = d['window_id']
+
+    def add_pane(self, pane):
+        self.panes.append(pane)
+
+    def current_pane(self):
+        for pane in self.panes:
+            if pane.is_current_pane():
+                return pane
+        return None
 
 class Pane(object):
-    def __init__(self, window):
+    def __init__(self, window=None):
         self.name =None
         self.window=window
+        self.id = None
 
+    def update_info(self, d):
+        self.name = d['pane_title']
+        self.id = d['pane_id']
 
+    def is_current_pane(self):
+        if self.id == self.window.session.tmux.this_pane:
+            return True
+        return False
 
 
 if __name__ == '__main__':
-    print(tmux_cmd_csv(SESSION_LIST, SESSION_COLS))
-    print(tmux_cmd_csv(WINDOW_LIST, WINDOW_COLS))
-    print(tmux_cmd_csv(PANE_LIST, PANE_COLS))
+    #print(tmux_cmd_csv(SESSION_LIST, SESSION_COLS))
+    #print(tmux_cmd_csv(WINDOW_LIST, WINDOW_COLS))
+    #print(tmux_cmd_csv(PANE_LIST, PANE_COLS))
+    tmux = TMux()
+    for session in tmux.sessions:
+        print("Session {}".format(session.name))
+        for window in session.windows:
+            print("  Window {}".format(window.name))
+            for pane in window.panes:
+                print("    Pane {}".format(pane.name))
+    cw = tmux.current_session().current_window()
+    print("Currently {}.{}".format(cw.session.name,
+                                   cw.name))
