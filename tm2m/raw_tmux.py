@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
 
 """
+
 """
 
 SESSION_LIST = """tmux list-s -F "#{session_name},#{session_id},#{session_attached}" """
@@ -8,6 +10,9 @@ WINDOW_LIST  = """tmux list-windows -a -F "#{session_id},#{window_name},#{window
 WINDOW_COLS  = ['session_id', 'window_name', 'window_id']
 PANE_LIST    = """tmux list-panes -a -F "#{session_id},#{window_id},#{pane_id},#{pane_active},#{pane_title}" """
 PANE_COLS    = ['session_id', 'window_id', 'pane_id', 'pane_active', 'pane_title']
+
+CREATE_WINDOW_FMT = '"#{session_id},#{window_name},#{window_id},#{pane_id},#{pane_title}"'
+CREATE_WINDOW = """tmux new-window -d -P -F {fmt}  -n {name} -t {session_name} {cmd}"""
 
 import csv
 import subprocess
@@ -77,6 +82,19 @@ class Session(object):
         self.id = d['session_id']
         self.attached = d['session_attached']
 
+    def create_window(self, name=None, cmd='bash'):
+        if name==None:
+            name = os.path.basename(shlex.split(cmd)[0])
+        cw = CREATE_WINDOW.format(name=name, session_name=self.name,
+                                  fmt=CREATE_WINDOW_FMT, cmd=cmd)
+        d = tmux_cmd_csv(cw, ['session_id','window_name','window_id','pane_id', 'pane_title'])[0]
+        window = Window(self)
+        window.update_info(d)
+        pane = Pane(window)
+        pane.update_info(d)
+        window.add_pane(pane)
+        self.add_window(window)
+
     def add_window(self, win):
         self.windows.append(win)
         
@@ -133,6 +151,10 @@ if __name__ == '__main__':
     #print(tmux_cmd_csv(WINDOW_LIST, WINDOW_COLS))
     #print(tmux_cmd_csv(PANE_LIST, PANE_COLS))
     tmux = TMux()
+
+    sess = tmux.current_session()
+    sess.create_window(name="Test1", cmd="zsh")
+
     for session in tmux.sessions:
         print("Session {}".format(session.name))
         for window in session.windows:
