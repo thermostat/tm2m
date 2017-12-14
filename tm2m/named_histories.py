@@ -38,7 +38,7 @@ class HistoryItem(object):
 
 
 class History(object):
-    def __init__(self, name, fname=None):
+    def __init__(self, name, fname=None, max_cnt=100):
         self.name = name
         self.lst = []
         self.fname = fname
@@ -46,6 +46,17 @@ class History(object):
     def add_item(self, cmd, shortname=None):
         hi = HistoryItem(cmd, shortname)
         self.lst.append(hi)
+
+    def remove_item(self, cmd=None):
+        if cmd:
+            s = self.search(cmd)
+            if len(s):
+                self.lst.remove(s[0])
+        else:
+            self.lst.remove(self._select_victim())
+
+    def _select_victim(self):
+        return self.lst[-1]
 
     def search(self, prefix):
         return [x for x in self.lst if x.startswith(prefix)]
