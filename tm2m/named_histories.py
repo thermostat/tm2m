@@ -9,6 +9,9 @@ import json
 def get_serializer():
     return json
 
+def get_serial_ext():
+    reutrn ".json"
+
 def strn_trunc(strn, limit=80):
     if len(strn) > limit:
         return strn[:limit-3]+"..."
@@ -77,4 +80,21 @@ class History(object):
 class HistoryMap(object):
     def __init__(self, history_save_dir=None):
         self.save_dir = history_save_dir
+        self._map = {}
         
+    def load(self):
+        assert self.save_dir
+        ext = get_serial_ext()
+        prex = "history."
+        for f in os.listdir(self.save_dir):
+            if not f.endswith(ext) or not f.startswith(prex):
+                continue
+            full_f = os.path.join(self.save_dir, f)
+            name = f.strip(ext).strip(prex)
+            hist = History(name, full_f)
+            self._map[name] = hist
+
+    def save(self):
+        for hist in self._map.values():
+            hist.save()
+
