@@ -13,4 +13,4 @@ def generate_args(in_args=None):
     return parser.parse_args(in_args)
 
 def main(args):
-    return "tm2m"
+    print( "tm2m" )
