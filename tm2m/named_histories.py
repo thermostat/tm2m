@@ -5,18 +5,45 @@ Managed history lists
 """
 
 import json
+import re, os, os.path
 
 def get_serializer():
     return json
 
 def get_serial_ext():
-    reutrn ".json"
+    return ".json"
 
 def strn_trunc(strn, limit=80):
     if len(strn) > limit:
         return strn[:limit-3]+"..."
     return strn
 
+######################################################################
+# Commands
+######################################################################
+
+def add_fd(name, fd, remove_prefix):
+    hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))
+    hm.load()
+    history = hm[name]
+    for line in fd:
+        if remove_prefix:
+            line = re.sub(r'^(\s*\d+\*?\s+)(.*?)\n', r'\2', line)
+        history.add_item(line)
+    history.save()
+
+def search(name, search_strn):
+    hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))
+    hm.load()
+    history = hm[name]
+    sr = history.search(search_strn)
+    if len(sr):
+        print(str(sr[-1]))
+    
+######################################################################
+# Objects
+######################################################################
+    
 class HistoryItem(object):
 
     @staticmethod
@@ -38,6 +65,9 @@ class HistoryItem(object):
 
     def __repr__(self):
         return strn_trunc(self.cmd, 20)
+
+    def __str__(self):
+        return self.cmd
 
 
 class History(object):
@@ -74,8 +104,9 @@ class History(object):
         if self.fname:
             serial = get_serializer()
             fd = open(self.fname, 'r')
+            loaded = serial.load(fd)
             self.lst = [ HistoryItem.load(x) for x in 
-                         serial.load(fd) ]
+                         loaded ]
 
 class HistoryMap(object):
     def __init__(self, history_save_dir=None):
@@ -90,11 +121,21 @@ class HistoryMap(object):
             if not f.endswith(ext) or not f.startswith(prex):
                 continue
             full_f = os.path.join(self.save_dir, f)
-            name = f.strip(ext).strip(prex)
+            name = f.strip(prex).strip(ext)
             hist = History(name, full_f)
+            hist.load()
             self._map[name] = hist
+        print(list(self._map.keys()))
 
     def save(self):
         for hist in self._map.values():
             hist.save()
 
+    def __getitem__(self, key):
+        if key in self._map:
+            return self._map[key]
+        else:
+            fname = os.path.join(self.save_dir, "history."+key+get_serial_ext())
+            new_history = History(key, fname)
+            self._map[key] = new_history
+            return new_history
