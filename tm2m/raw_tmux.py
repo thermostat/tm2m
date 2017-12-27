@@ -33,6 +33,15 @@ def tmux_set_buffer(value, window=None):
     cmd_list = shlex.split(cmd)
     subprocess.check_output(cmd_list)
 
+
+TMUX_OBJ = None
+def get_tmux():
+    global TMUX_OBJ
+    if TMUX_OBJ == None:
+        TMUX_OBJ = TMux()
+    return TMUX_OBJ
+
+
 class TMux(object):
     def __init__(self):
         self.sessions = []
