@@ -13,6 +13,7 @@ PANE_COLS    = ['session_id', 'window_id', 'pane_id', 'pane_active', 'pane_title
 
 CREATE_WINDOW_FMT = '"#{session_id},#{window_name},#{window_id},#{pane_id},#{pane_title}"'
 CREATE_WINDOW = """tmux new-window -d -P -F {fmt}  -n {name} -t {session_name} {cmd}"""
+SET_BUFFER = """tmux set-buffer "{value}" """
 
 import csv
 import subprocess
@@ -27,7 +28,10 @@ def tmux_cmd_csv(cmd, cols):
     return list(csv.DictReader(io.StringIO(output.decode('utf-8')),  
                                cols))
 
-
+def tmux_set_buffer(value, window=None):
+    cmd = SET_BUFFER.format(value=value)
+    cmd_list = shlex.split(cmd)
+    subprocess.check_output(cmd_list)
 
 class TMux(object):
     def __init__(self):
@@ -147,9 +151,6 @@ class Pane(object):
 
 
 if __name__ == '__main__':
-    #print(tmux_cmd_csv(SESSION_LIST, SESSION_COLS))
-    #print(tmux_cmd_csv(WINDOW_LIST, WINDOW_COLS))
-    #print(tmux_cmd_csv(PANE_LIST, PANE_COLS))
     tmux = TMux()
 
     sess = tmux.current_session()
