@@ -14,6 +14,7 @@ PANE_COLS    = ['session_id', 'window_id', 'pane_id', 'pane_active', 'pane_title
 CREATE_WINDOW_FMT = '"#{session_id},#{window_name},#{window_id},#{pane_id},#{pane_title}"'
 CREATE_WINDOW = """tmux new-window -d -P -F {fmt}  -n {name} -t {session_name} {cmd}"""
 SET_BUFFER = """tmux set-buffer "{value}" """
+SEND_KEYS = """tmux send-keys -t {window_id} {value}"""
 
 import csv
 import subprocess
@@ -28,11 +29,10 @@ def tmux_cmd_csv(cmd, cols):
     return list(csv.DictReader(io.StringIO(output.decode('utf-8')),  
                                cols))
 
-def tmux_set_buffer(value, window=None):
+def tmux_set_buffer(value):
     cmd = SET_BUFFER.format(value=value)
     cmd_list = shlex.split(cmd)
     subprocess.check_output(cmd_list)
-
 
 TMUX_OBJ = None
 def get_tmux():
@@ -79,6 +79,9 @@ class TMux(object):
             if session.current_window():
                 return session
 
+    def __repr__(self):
+        return "TMux [{} sessions]".format(len(self.sessions))
+
 
 class Session(object):
     def __init__(self, tmux=None, info=None):
@@ -123,6 +126,10 @@ class Session(object):
                 return window
         return None
 
+    def __repr__(self):
+        return "Session {} [{} windows]".format(self.name,
+                                                len(self.windows))
+
 class Window(object):
     def __init__(self, session=None):
         self.name = None
@@ -137,11 +144,20 @@ class Window(object):
     def add_pane(self, pane):
         self.panes.append(pane)
 
+    def send_keys(self, keys):
+        cmd = SEND_KEYS.format(window_id=self.id, value=keys)
+        cmd_list = shlex.split(cmd)
+        subprocess.check_output(cmd_list)
+
     def current_pane(self):
         for pane in self.panes:
             if pane.is_current_pane():
                 return pane
         return None
+
+    def __repr__(self):
+        return "Window {} [{}]".format(self.name,
+                                       self.id)
 
 class Pane(object):
     def __init__(self, window=None):

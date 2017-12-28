@@ -28,7 +28,7 @@ class EmacsWindow(AppWindow):
     def __init__(self, window=None):
         self.window = window
         self.name = 'emacs'
-        super().__init__()        
+        super().__init__()
 
 class PythonWindow(AppWindow):
     def __init__(self, window=None):
