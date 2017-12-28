@@ -12,4 +12,4 @@ Session = raw_tmux.Session
 TMux = raw_tmux.TMux
 get_tmux = raw_tmux.get_tmux
 
-commandline = cmdline.commandline
+commandline = cmdline.default_commandline
