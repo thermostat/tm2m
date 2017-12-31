@@ -5,7 +5,7 @@ import sys
 from . import named_histories
 from . import raw_tmux
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 def default_commandline():
     TM2MCL().commandline()
