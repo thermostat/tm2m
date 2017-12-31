@@ -4,6 +4,12 @@
 Managed history lists
 """
 
+ZSH_FUNCTION = """
+zshaddhistory() {
+  tm2m --name zsh --add-one "$1"
+}
+"""
+
 import json
 import re, os, os.path
 import pick
@@ -22,6 +28,13 @@ def strn_trunc(strn, limit=80):
 ######################################################################
 # Commands
 ######################################################################
+
+def add_command(name, command):
+    hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))
+    hm.load()
+    history = hm[name]
+    history.add_item(command)
+    history.save()
 
 def add_fd(name, fd, remove_prefix):
     hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))
@@ -134,7 +147,6 @@ class HistoryMap(object):
             hist = History(name, full_f)
             hist.load()
             self._map[name] = hist
-        print(list(self._map.keys()))
 
     def save(self):
         for hist in self._map.values():

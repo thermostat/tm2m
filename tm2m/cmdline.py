@@ -33,6 +33,7 @@ class TM2MCL(Commandline):
         add_arg('--version', action='store_true')
         add_arg('--history', action='store_true')
         add_arg('--add-stdin', action='store_true')
+        add_arg('--add-one', nargs=1)
         add_arg('--search', nargs=1)
         add_arg('--name', nargs=1)
         add_arg('--nbr-prefix', action='store_true', default=False)
@@ -44,6 +45,8 @@ class TM2MCL(Commandline):
         if args.add_stdin:
             named_histories.add_fd(args.name[0],
                                    sys.stdin, args.nbr_prefix)
+        elif args.add_one:
+            named_histories.add_command(args.name[0], args.add_one[0])
         elif len(args.search):
             named_histories.search(args.name[0], args.search[0])
 
