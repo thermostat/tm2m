@@ -62,9 +62,13 @@ class InsertHistoryItem(Commandline):
         else:
             app_name = args.app_name[0]
         cmd = named_histories.pick_cmd(app_name)
-        print(cmd)
+        # Make sure we're not putting an ending newline
+        cmd = cmd.strip()
         if args.set_buffer:
             raw_tmux.tmux_set_buffer(cmd)
+        else:
+            print(cmd)
+            
 
 def history_add_cmd(args):
     pass
