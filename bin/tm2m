@@ -6,4 +6,4 @@
 
 import tm2m
 
-tm2m.default_commandline()
+tm2m.commandline()

@@ -8,7 +8,7 @@ from setuptools import setup
 
 setup(
     name='tm2m',
-    scripts=['bin/tm2m'],
-    version="0.1",
-    install_requires=[]
+    scripts=['bin/tm2m', 'bin/tm2m_pick'],
+    version="0.2",
+    install_requires=['pick']
     )
