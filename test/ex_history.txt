@@ -135,7 +135,6 @@
   135* cd tm2m
   136* git out
   137* git push
-  138* echo c1f7c6d104c9ea24e08e0e559f59d6c27083a50d > ~/.github.token
   139* tmux list-s
   140* tmux att
   141* ls
@@ -272,13 +271,11 @@
   272  pip install -e .
   273  tm2m_pick
   274  tmhist
-  275  ^[(B^[)0^[[?1049h^[[1;51r^[[m^O^[[4l^[[?1h^[=^[[39;49m^[[?25l^[[39;49m^[[m^O^[[H^[[J Command:^M * python3^M history | tail^M history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix^M ls ~/.tm2m^M mkdir ~/.tm2m^M history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix^M ls ~/.tm2m^M ls ~/.tm2m/history.zsh.json^M less ~/.tm2m/history.zsh.json^M rm ~/.tm2m/history.zsh.json^[[?1l^[>^[[51;1H^[[34h^[[?25h^[[?1049l^M^[[?1l^[>python3
   276  echo 'echo hi' | print -s
   277  
   278  print -s echo hi
   279  echo hi
   280  print -s `tm2m_pick`
-  281  ^[(B^[)0^[[?1049h^[[1;51r^[[m^O^[[4l^[[?1h^[=^[[39;49m^[[?25l^[[39;49m^[[m^O^[[H^[[J Command:^M * python3^M history | tail^M history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix^M ls ~/.tm2m^M mkdir ~/.tm2m^M history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix^M ls ~/.tm2m^M ls ~/.tm2m/history.zsh.json^M less ~/.tm2m/history.zsh.json^M rm ~/.tm2m/history.zsh.json^[[H^[[J Command:^M python3^M * history | tail^M history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix^M ls ~/.tm2m^M mkdir ~/.tm2m^M history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix^M ls ~/.tm2m^M ls ~/.tm2m/history.zsh.json^M less ~/.tm2m/history.zsh.json^M rm ~/.tm2m/history.zsh.json^[[H^[[J Command:^M python3^M history | tail^M * history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix^M ls ~/.tm2m^M mkdir ~/.tm2m^M history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix^M ls ~/.tm2m^M ls ~/.tm2m/history.zsh.json^M less ~/.tm2m/history.zsh.json^M rm ~/.tm2m/history.zsh.json^[[?1l^[>^[[51;1H^[[34h^[[?25h^[[?1049l^M^[[?1l^[>history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix
   282  tm2m_pick
   283  git status
   284  git diff
