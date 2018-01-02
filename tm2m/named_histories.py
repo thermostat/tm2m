@@ -124,9 +124,12 @@ class History(object):
         self.name = name
         self.lst = []
         self.fname = fname
+        self.max_cnt = max_cnt
 
     def add_item(self, cmd, shortname=None):
         hi = HistoryItem(cmd, shortname)
+        if len(self.lst) + 1 > self.max_cnt:
+            self.remove_item()
         self.lst.append(hi)
 
     def remove_item(self, cmd=None):
@@ -138,7 +141,7 @@ class History(object):
             self.lst.remove(self._select_victim())
 
     def _select_victim(self):
-        return self.lst[-1]
+        return self.lst[0]
 
     def __len__(self):
         return len(self.lst)
