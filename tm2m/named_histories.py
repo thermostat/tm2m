@@ -68,11 +68,11 @@ def search(name, search_strn):
     if len(sr):
         print(str(sr[-1]))
 
-def pick_cmd(name, limit=40):
+def pick_cmd(name, limit=100):
     hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))    
     history = hm[name]
     history.load()
-    lst = [x.cmd for x in history.lst[:limit]]
+    lst = [x.cmd.strip('\n') for x in history.lst[:limit]]
     title = "Command using {} ({}):".format(name,
                                             history.fname)
     cmd,_ = pick.pick(lst, title)
