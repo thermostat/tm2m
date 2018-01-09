@@ -50,8 +50,10 @@ def add_command(name, command):
     history.add_item(command)
     history.save()
 
-def add_fd(name, fd, remove_prefix):
-    hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))
+def add_fd(name, fd, remove_prefix=True, history_dir=None):
+    if history_dir == None:
+        history_dir = os.path.join(os.environ['HOME'], '.tm2m')
+    hm = HistoryMap(history_dir)
     hm.load()
     history = hm[name]
     for line in fd:
@@ -59,6 +61,7 @@ def add_fd(name, fd, remove_prefix):
             line = re.sub(r'^(\s*\d+\*?\s+)(.*?)\n', r'\2', line)
         history.add_item(line)
     history.save()
+    return history
 
 def search(name, search_strn):
     hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))
@@ -154,6 +157,7 @@ class History(object):
             serial = get_serializer()
             fd = open(self.fname, 'w')
             serial.dump([x.serialize() for x in self.lst], fd)
+            fd.close()
 
     def load(self):
         if self.fname:
@@ -162,6 +166,7 @@ class History(object):
             loaded = serial.load(fd)
             self.lst = [ HistoryItem.load(x) for x in 
                          loaded ]
+            fd.close()
 
 class HistoryMap(object):
     def __init__(self, history_save_dir=None):
