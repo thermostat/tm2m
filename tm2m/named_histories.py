@@ -10,8 +10,22 @@ zshaddhistory() {
 }
 """
 
+CMD_BIASES = {
+    "gcc"            : .25,
+    "make"           : .25,
+    "git"            : .1,
+    "ls"             :-.25,
+    "pwd"            :-.25,
+    "echo"           :-.2,
+    "sed"            : .1,
+    "awk"            : .1,
+    "grep"           :0.0,
+    "tm2m"           :-.25,
+    "tm2m_pick"      :-.4
+    }
+
 import json
-import re, os, os.path
+import re, os, os.path, time
 import pick
 
 def get_serializer():
@@ -36,8 +50,10 @@ def add_command(name, command):
     history.add_item(command)
     history.save()
 
-def add_fd(name, fd, remove_prefix):
-    hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))
+def add_fd(name, fd, remove_prefix=True, history_dir=None):
+    if history_dir == None:
+        history_dir = os.path.join(os.environ['HOME'], '.tm2m')
+    hm = HistoryMap(history_dir)
     hm.load()
     history = hm[name]
     for line in fd:
@@ -45,6 +61,7 @@ def add_fd(name, fd, remove_prefix):
             line = re.sub(r'^(\s*\d+\*?\s+)(.*?)\n', r'\2', line)
         history.add_item(line)
     history.save()
+    return history
 
 def search(name, search_strn):
     hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))
@@ -54,12 +71,14 @@ def search(name, search_strn):
     if len(sr):
         print(str(sr[-1]))
 
-def pick_cmd(name, limit=40):
+def pick_cmd(name, limit=100):
     hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))    
     history = hm[name]
     history.load()
-    lst = [x.cmd for x in history.lst[:limit]]
-    cmd,_ = pick.pick(lst, "Command:")
+    lst = [x.cmd.strip('\n') for x in history.lst[:limit]]
+    title = "Command using {} ({}):".format(name,
+                                            history.fname)
+    cmd,_ = pick.pick(lst, title)
     return cmd
 
 ######################################################################
@@ -72,9 +91,16 @@ class HistoryItem(object):
     def load(obj):
         return HistoryItem(**obj)
 
-    def __init__(self, cmd, shortname=None):
+    def __init__(self, cmd, shortname=None,
+                 timestamp=None,
+                 score=0.5,
+                 uses=1):
         self.cmd = cmd
         self.shortname = shortname
+        if timestamp is None:
+            self.timestamp = time.time()
+        self.score = score
+        self.uses = uses
 
     def __eq__(self, other):
         return self.cmd == other.cmd
@@ -85,6 +111,10 @@ class HistoryItem(object):
     def serialize(self):
         return vars(self)
 
+    def score_cmd(self):
+        cmd_name = os.path.basename(shlex.split(self.cmd)[0])
+        self.score += CMD_BIASES.get(cmd_name, .05)
+    
     def __repr__(self):
         return strn_trunc(self.cmd, 20)
 
@@ -97,9 +127,12 @@ class History(object):
         self.name = name
         self.lst = []
         self.fname = fname
+        self.max_cnt = max_cnt
 
     def add_item(self, cmd, shortname=None):
         hi = HistoryItem(cmd, shortname)
+        if len(self.lst) + 1 > self.max_cnt:
+            self.remove_item()
         self.lst.append(hi)
 
     def remove_item(self, cmd=None):
@@ -111,7 +144,10 @@ class History(object):
             self.lst.remove(self._select_victim())
 
     def _select_victim(self):
-        return self.lst[-1]
+        return self.lst[0]
+
+    def __len__(self):
+        return len(self.lst)
 
     def search(self, prefix):
         return [x for x in self.lst if x.startswith(prefix)]
@@ -121,6 +157,7 @@ class History(object):
             serial = get_serializer()
             fd = open(self.fname, 'w')
             serial.dump([x.serialize() for x in self.lst], fd)
+            fd.close()
 
     def load(self):
         if self.fname:
@@ -129,6 +166,7 @@ class History(object):
             loaded = serial.load(fd)
             self.lst = [ HistoryItem.load(x) for x in 
                          loaded ]
+            fd.close()
 
 class HistoryMap(object):
     def __init__(self, history_save_dir=None):
@@ -143,7 +181,8 @@ class HistoryMap(object):
             if not f.endswith(ext) or not f.startswith(prex):
                 continue
             full_f = os.path.join(self.save_dir, f)
-            name = f.strip(prex).strip(ext)
+            #name = f.strip(prex).strip(ext)
+            name = f[len(prex):-len(ext)]
             hist = History(name, full_f)
             hist.load()
             self._map[name] = hist

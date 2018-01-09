@@ -1,0 +1,449 @@
+    1  tmux att
+    2  ls
+    3  cd .zsh
+    4  cd
+    5  cd .oh-my-zsh
+    6  ls
+    7  git status
+    8  cd
+    9  echo $plugins
+   10  ls
+   11  cd dw_config
+   12  ls
+   13  git status
+   14  echo $plugins
+   15  plugins+= ( emoji )
+   16  $echo $plugins
+   17  plugins += ( emoji )
+   18  echo $plugins
+   19  plugins+=( emoji )
+   20  echo $plugins
+   21  ruby -v
+   22  sudo apt-get install -U ruby
+   23  which zle
+   24  zle hi
+   25  ls -a ~
+   26  tail ~/.zsh_history
+   27  ls
+   28  tail ~/.zsh_history
+   29  alias
+   30  which tmux
+   31  brew install tmux
+   32  which tmux
+   33  ls
+   34  cd dw_config
+   35  ls
+   36  git status
+   37  ls ipython
+   38  ls
+   39  ssh jetson
+   40  git status
+   41  ls
+   42  pwd
+   43  cd code
+   44  ls
+   45  which python3
+   46  ls
+   47  mkdir py_envs
+   48  cd py_envs
+   49  python3 -m venv tm2m_dev
+   50  ls
+   51  source tm2m_dev/bin/activate
+   52  cd ..
+   53  ls
+   54  git clone http://github.com/thermostat/tm2m.git
+   55  ls
+   56  cd tm2m
+   57  ls
+   58  pip3 install -e ./tm2m
+   59  ls
+   60  ls tm2m
+   61  cd ..
+   62  pip3 install -e ./tm2m
+   63  tm2m
+   64  ls
+   65  bin/tm2m
+   66  ls
+   67  chmod 755 bin/tm2m
+   68  tm2m
+   69  ls
+   70  cd ..
+   71  ./bin/tm2m
+   72  pwd
+   73  tmux list
+   74  tmux list-s
+   75  tmux new-s
+   76  source ~/code/py_envs/tm2m_dev/bin/activate
+   77  ls
+   78  emacs -nw tm2m/cmdline.py
+   79  ls
+   80  ./bin/tm2m --version
+   81  ls
+   82  cd
+   83  ls
+   84  cd dw_config
+   85  git pull
+   86  ls
+   87  cat tmux_custom
+   88  tmux set-window-option -g allow-rename off
+   89  python3 ~/junk/args.py one two three
+   90  python3
+   91  python3 ~/junk/args.py one two three "four and five"
+   92  history --help
+   93  history | tail
+   94  history ls | tail
+   95  man history
+   96  history --help
+   97  history | tail
+   98  history history | tail
+   99  history history | tail | sed -e 's/^\s*\d+//g'
+  100  history history | tail | sed -e 's/^\s*\d+/d'
+  101  history history | tail | sed 's/^\s*\d+//g'
+  102  history history | tail | sed 's/^\s*\[0-9]+//g'
+  103  history history | tail | sed 's/^[ \t][0-9]\+//g'
+  104  history history | tail | sed 's/^[ \t]\*[0-9]\+//g'
+  105* tmux att
+  106* ls
+  107* bin/tm2m --help
+  108* history | tail
+  109* python3
+  110* history | tail
+  111* history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix
+  112* ls ~/.tm2m
+  113* mkdir ~/.tm2m
+  114* history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix
+  115* ls ~/.tm2m
+  116* ls ~/.tm2m/history.zsh.json
+  117* less ~/.tm2m/history.zsh.json
+  118* rm ~/.tm2m/history.zsh.json
+  119* history | tail | bin/tm2m --history --name zsh --add-stdin --nbr-prefix
+  120* less ~/.tm2m/history.zsh.json
+  121* bin/tm2m --search rm
+  122* bin/tm2m --name zsh --search rm
+  123* less ~/.tm2m/history.zsh.json
+  124* bin/tm2m --name zsh --search rm
+  125* ls ~/.tm2m
+  126* bin/tm2m --name zsh --search rm
+  127* git status
+  128* git add bin/tm2m tm2m/__init__.py tm2m/cmdline.py tm2m/named_histories.py
+  129* git commit -m 'history loading and searching'
+  130* git push
+  131* ls
+  132* cd code
+  133* ls
+  134* ssh jetson
+  135* cd tm2m
+  136* git out
+  137* git push
+  139* tmux list-s
+  140* tmux att
+  141* ls
+  142* git pull
+  143* git branch -l
+  144* git branch -a
+  145* bash
+  146* echo $(pwd)
+  147* echo `pwd`
+  148* ls
+  149* git status
+  150* git add tm2m/app_window.py
+  151* git commit -m 'app window'
+  152* git out
+  153* ls
+  154* git status
+  155* git diff
+  156* git add tm2m/app_window.py tm2m/raw_tmux.py
+  157* git commit -m 'add window characteristics'
+  158* python
+  159* ipython
+  160* python
+  161* git pull
+  162* which python
+  163* which python3
+  164* python3
+  165* git commit -m "app window creation" 
+  166* git add -m tm2m/app_window.py
+  167* git add  tm2m/app_window.py
+  168* git add  tm2m/raw_tmux.py
+  169* git commit -m 'app window creation'
+  170* git push
+  171* git push --set-upstream origin app_window
+  172* git branch -l
+  173* git branch -a
+  174* git push origin app_window
+  175* git show origin
+  176* git config --get remote.origin.url
+  177* cat ~/.github.token
+  178* git push origin app_window
+  179* ls
+  180* python3
+  181* ls
+  182* pwd
+  183* git status
+  184* git diff
+  185* python3
+  186* git status
+  187* echo *.pyc >> .gitignore
+  188* git status
+  189* ls .gitignore
+  190* echo '*.pyc' > .gitignore
+  191* git status
+  192* echo '.gitignore' >> .gitignore
+  193* git status
+  194* git add tm2m/__init__.py tm2m/app_window.py tm2m/raw_tmux.py
+  195* git status
+  196* echo '*.egg-info' > .gitignore
+  197* git status
+  198* echo '.gitignore' >> .gitignore
+  199* echo '*.pyc' >> .gitignore
+  200* git status
+  201* git commit -m 'add send_keys support, basic repr'
+  202* git push
+  203* git push --set-upstream origin app_window
+  204* man tmux
+  205* which python
+  206* which python3
+  207* whihc pip
+  208* which pip
+  209* which python
+  210* /usr/local/bin/python
+  211* /usr/local/bin/pyenv
+  212* ls
+  213* pushd ..
+  214* ls
+  215* cd py_envs
+  216* /usr/local/bin/pyvenv-3.4 tm2m_dev
+  217* ls
+  218* source tm2m_dev/bin/activate
+  219* which pip
+  220* pip install pick
+  221* python
+  222* pwd
+  223* ls
+  224* ls tm2m_dev
+  225* ls tm2m_dev/lib
+  226* ls tm2m_dev/lib/python3.4
+  227* ls tm2m_dev/lib/python3.4/site-packages
+  228* ls tm2m_dev/lib/python3.4/site-packages/pick
+  229* ls tm2m_dev/lib/python3.4/site-packages/pick/__init__.py
+  230* python
+  231* import curses
+  232* python
+  233* cd ..
+  234* ls
+  235* git clone https://github.com/thermostat/pick.git
+  236* cd pick
+  237* ls
+  238* cd pick
+  239* pip3 uninstall pick
+  240* pip install -e ~/code/pick
+  241* python
+  242* git status
+  243* git add __init__.py
+  244* git commit 
+  245* git push
+  246* history -s "echo hello"
+  247* print -s "echo hello"
+  248* echo hello
+  249* python
+  250* ls ~/.tm2m
+  251* cat ~/.tm2m/history.zsh.json
+  252* python
+  253  ls
+  254  python
+  255  source ~/code/py_envs/tm2m_dev/bin/activate
+  256  ls
+  257  chmod 755 bin/tm2m_pick
+  258  bin/tm2m_pick
+  259  git status
+  260  git add -a
+  261  git add --all
+  262  git status
+  263  git commit
+  264  git push
+  265  alias tmhist='print -s `tm2m_pick`'
+  266  tmhist
+  267  
+  268  which tm2m
+  269  ls
+  270  pip uninstall tm2m
+  271  pip -e .
+  272  pip install -e .
+  273  tm2m_pick
+  274  tmhist
+  276  echo 'echo hi' | print -s
+  277  
+  278  print -s echo hi
+  279  echo hi
+  280  print -s `tm2m_pick`
+  282  tm2m_pick
+  283  git status
+  284  git diff
+  285  git status
+  286  git add --all
+  287  git status
+  288  git commit
+  289  git push
+  290  git pull
+  291  man fc
+  292  ls
+  293  ls tm2m
+  294  ls tm2m/__pycache__
+  295  ls tm2m
+  296  ls tm2m/*.pyc
+  297  ls
+  298  cat setup.py
+  299  ls tm2m
+  300  ls tm2m/__init__.py
+  301  cat tm2m/__init__.py
+  302  tm2m_pick
+  303  tm2m_pick --set-buffer
+  304  tm2m --help
+  305  tm2m --name zsh --add-one "echo 'added one'"
+  306  tm2m_pick --set-buffer
+  307  echo 'added one'
+  308  zshaddhistory() {\n  tm2m --name zsh --add-one "$1"\n}
+  309  echo added another...
+  310  tm2m_pick
+  311  echo 'added one'
+  312  tm2m_pick --set-buffer
+  313  echo added another...
+  314  ls
+  315  ls /home/
+  316  ls /home/danw
+  317  pwd
+  318  ls /Users
+  319  tm2m_pick --set-buffer
+  320  ls /Users
+  321  \n  tm2m --name zsh --add-one "$1"\n}
+  322  git status
+  323  git diff | less
+  324  git add --all
+  325  git commit 
+  326  git push
+  327* ls
+  328* cd
+  329* ls
+  330* ls code/py_envs
+  331* ls code/py_envs/tm2m_dev
+  332* ls code/py_envs/tm2m_dev/bin
+  333* code/py_envs/tm2m_dev/bin/tm2m --help
+  334  git status
+  335  git add --all
+  336  git commit -m "document, set 0.2 version"
+  337  git push
+  338  git pull
+  339  git checkout master
+  340  git pull
+  341  ls
+  342  git pull
+  343  zshaddhistory { }
+  344  function zshaddhistory { }
+  345  ls
+  346  git status
+  347  git reset --hard HEAD
+  348  git pull
+  349  pip uninstall tm2m
+  350  ls
+  351  pip install -e .
+  352  tm2m --help
+  353  zshaddhistory() {\n  tm2m --name zsh --add-one "$1"\n}
+  354  ls
+  355  echo this is really something
+  356  tm2m_pick --set-buffer
+  357  echo this is really something
+  358  tm2m_pick --set-buffer
+  359  echo this is really something
+  360  tm2m_pick --set-buffer
+  361  echo this is really something
+  362  git status
+  363  git add --all
+  364  git commit
+  365  git push
+  366  git log -n 3
+  367  man git tag
+  368  man git-tag
+  369  git log -n 4
+  370  git shlog
+  371  git tag v0.2 7c67b4f
+  372  git push origin v0.2
+  373  git branch
+  374  git checkout app_window
+  375  git pull
+  376  tm2m_pick
+  377  tm2m_pick --set-buffer
+  378  echo this is really something
+  379  git pull
+  380  tm2m --help
+  381* pwd
+  382* path
+  383* echo $PATH
+  384* export PATH=PATH:${PWD}/code/py_envs/tm2m_dev/bin
+  385* tm2m_pick
+  386* which tmux
+  387  tm2m_pick
+  388* source code/py_envs/tm2m_dev/bin/activate
+  389  tm2m_pick
+  390  python
+  391* pwd
+  392* cd code
+  393* ls
+  394* cd
+  395* ls
+  396* cd code/py_envs
+  397* ls
+  398* cd tm2m_dev
+  399* bin/tm2m --help
+  400* bin/tm2m_pick
+  401* zshaddhistory() {\n  tm2m --name zsh --add-one "$1"\n}
+  402* ls
+  403* pwd
+  404* bin/tm2m_pick
+  405* zshaddhistory() {\n  tm2m --name tm2m_test --add-one "$1"\n}
+  406* ls
+  407* pwd
+  408* date
+  409* bin/tm2m_pick
+  410* date
+  411* bin/tm2m_pick
+  412* /bin/true
+  413* /usr/bin/true
+  414* bin/tm2m_pick
+  415* pwd
+  416* tmux list-s
+  417* tmux att
+  418* zshaddhistory() {\n  /Users/danw/code/py_envs/tm2m_dev/bin/tm2m --name tm2m_test --add-one "$1"\n}
+  419* ls
+  420* date
+  421* bin/tm2m_pick
+  422* /Users/danw/code/py_envs/tm2m_dev/bin/tm2m --name tm2m_test --add-one date
+  423* bin/tm2m_pick
+  424* cat ~/.tm2m
+  425* ls ~/.tm2m
+  426* cat ~/.tm2m/history.tm2m_test.json
+  427* ls
+  428* cat ~/.tm2m/history.tm2m_test.json 
+  429* pwd
+  430* ls
+  431* pwd
+  432* true
+  433* tm2m_pick
+  434  git stuat
+  435  git status
+  436  git diff
+  437  git stage --all
+  438  git status
+  439  git commit
+  440  git push
+  441* ssh jetson
+  442* ls
+  443* tm2m_pick
+  444* history | less
+  445* tm2m --help
+  446  history | less
+  447  zshaddhistory() {\n\n}
+  448  ls
+  449  git status
+  450  ls
+  451  mkdir test
+  452  history | less
