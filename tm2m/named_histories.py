@@ -128,6 +128,7 @@ class History(object):
         self.lst = []
         self.fname = fname
         self.max_cnt = max_cnt
+        self.loaded = False
 
     def add_item(self, cmd, shortname=None):
         hi = HistoryItem(cmd, shortname)
@@ -159,19 +160,21 @@ class History(object):
             serial.dump([x.serialize() for x in self.lst], fd)
             fd.close()
 
-    def load(self):
-        if self.fname:
+    def load(self, force=False):
+        if self.fname and (not self.loaded or force):
             serial = get_serializer()
             fd = open(self.fname, 'r')
             loaded = serial.load(fd)
             self.lst = [ HistoryItem.load(x) for x in 
                          loaded ]
             fd.close()
+            self.loaded = True
 
 class HistoryMap(object):
-    def __init__(self, history_save_dir=None):
+    def __init__(self, history_save_dir=None, lazy=True):
         self.save_dir = history_save_dir
         self._map = {}
+        self.lazy = lazy
         
     def load(self):
         assert self.save_dir
@@ -184,7 +187,8 @@ class HistoryMap(object):
             #name = f.strip(prex).strip(ext)
             name = f[len(prex):-len(ext)]
             hist = History(name, full_f)
-            hist.load()
+            if not self.lazy:
+                hist.load()
             self._map[name] = hist
 
     def save(self):
@@ -193,6 +197,7 @@ class HistoryMap(object):
 
     def __getitem__(self, key):
         if key in self._map:
+            self._map[key].load()
             return self._map[key]
         else:
             fname = os.path.join(self.save_dir, "history."+key+get_serial_ext())
