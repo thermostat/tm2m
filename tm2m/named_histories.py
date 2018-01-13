@@ -75,7 +75,7 @@ def pick_cmd(name, limit=100):
     hm = HistoryMap(os.path.join(os.environ['HOME'], '.tm2m'))    
     history = hm[name]
     history.load()
-    lst = [x.cmd.strip('\n') for x in history.lst[:limit]]
+    lst = [x.cmd.strip('\n') for x in history.sorted()[:limit]]
     title = "Command using {} ({}):".format(name,
                                             history.fname)
     cmd,_ = pick.pick(lst, title)
@@ -122,6 +122,7 @@ class HistoryItem(object):
         return self.cmd
 
 
+
 class History(object):
     def __init__(self, name, fname=None, max_cnt=100):
         self.name = name
@@ -145,13 +146,17 @@ class History(object):
             self.lst.remove(self._select_victim())
 
     def _select_victim(self):
-        return self.lst[0]
+        #return self.lst[0]
+        return self.sorted()[-1]
 
     def __len__(self):
         return len(self.lst)
 
     def search(self, prefix):
         return [x for x in self.lst if x.startswith(prefix)]
+
+    def sorted(self):
+        return sorted(self.lst, reverse=True, key=lambda x: x.score)
 
     def save(self):
         if self.fname:
